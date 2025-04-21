@@ -110,15 +110,6 @@ function WalletSection() {
               </div>
             </div>
           </div>
-          <div className="flex space-x-2">
-            <button
-              onClick={handleNextWallet}
-              className="px-4 py-2 bg-white bg-opacity-10 backdrop-blur-md hover:bg-opacity-20 text-[#00164d] rounded-lg transition flex items-center"
-            >
-              <ChevronDown className="h-4 w-4 mr-1" />
-              Switch
-            </button>
-          </div>
         </div>
 
         <div className="mb-6">

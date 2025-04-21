@@ -8,7 +8,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Public key is required' }, { status: 400 });
     }
 
-    const response = await fetch('https://solana-mainnet.g.alchemy.com/v2/oHs0xLln0rLVHulnSd-vOn3LZ30nrfyn', {
+    const response = await fetch(`https://solana-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
