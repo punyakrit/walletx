@@ -10,10 +10,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 export default function WalletPage() {
+  const [privateKey, setPrivateKey] = useState<string>("");
   const [isWalletCreated, setIsWalletCreated] = useState<"default" | string>(
     "default"
   );
@@ -167,15 +169,44 @@ export default function WalletPage() {
                     <p className="text-gray-600 text-center mb-8">
                       Access your wallet by entering your private key securely.
                     </p>
-                    <button
-                      className="w-full bg-[#00164D] text-white py-3.5 px-6 rounded-xl transition-all duration-300 cursor-pointer"
-                      onClick={() => {
-                        setIsWalletCreated("key");
-                        localStorage.setItem("wallet", "key");
-                      }}
-                    >
-                      Login with Key
-                    </button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button
+                          className="w-full bg-[#00164D] text-white py-3.5 px-6 rounded-xl transition-all duration-300 cursor-pointer"
+                          onClick={() => {}}
+                        >
+                          Login with Key
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle className="text-[#00164D]">
+                            Input Private Key
+                          </DialogTitle>
+                        </DialogHeader>
+                        <DialogDescription>
+                          <Input
+                            type="text"
+                            placeholder="Private Key"
+                            onChange={(e) => {
+                              setPrivateKey(e.target.value);
+                            }}
+                          />
+                        </DialogDescription>
+                        <DialogFooter>
+                          <Button
+                            className="bg-[#00164D] text-white hover:bg-[#002080]"
+                            onClick={() => {
+                              localStorage.setItem("privateKey", privateKey);
+                              setIsWalletCreated("key");
+                              localStorage.setItem("wallet", "key");
+                            }}
+                          >
+                            Save Private Key
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               </div>
@@ -202,7 +233,7 @@ export default function WalletPage() {
       )}
       {isWalletCreated === "key" && (
         <div>
-          <h1>Private Key</h1>
+          <h1>Wallet</h1>
         </div>
       )}
     </>
