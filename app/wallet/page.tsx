@@ -1,6 +1,7 @@
 "use client";
 import CreateWallet from "@/components/page/wallet/Create-Wallet";
 import WalletDashboard from "@/components/page/wallet/WalletDashboard";
+import WalletSection from "@/components/page/wallet/WalletSection";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -75,7 +76,7 @@ export default function WalletPage() {
       )}
       {isWalletCreated === "seed" && (
         <div>
-          <h1>Seed Phrase</h1>
+          <WalletSection/>
         </div>
       )}
       {isWalletCreated === "key" && (

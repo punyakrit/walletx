@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ function WalletDashboard({
   setPrivateKey,
   privateKey,
 }: any) {
+    const [mnemonic, setMnemonic] = useState("")
   return (
     <div className="min-h-screen bg-[#E4F6FF]">
       <div className="container mx-auto px-4 py-12 md:py-20">
@@ -86,17 +87,46 @@ function WalletDashboard({
                   Use Seed Phrase
                 </h2>
                 <p className="text-gray-600 text-center mb-8">
-                  Recover your wallet using your 12 or 24-word seed phrase.
+                  Recover your wallet using your 12 word seed phrase.
                 </p>
-                <button
-                  className="w-full bg-[#00164D] text-white py-3.5 px-6 rounded-xl transition-all duration-300 cursor-pointer"
-                  onClick={() => {
-                    setIsWalletCreated("seed");
-                    localStorage.setItem("wallet", "seed");
-                  }}
-                >
-                  Recover Wallet
-                </button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button
+                      className="w-full bg-[#00164D] text-white py-3.5 px-6 rounded-xl transition-all duration-300 cursor-pointer"
+                      onClick={() => {}}
+                    >
+                      Recover Wallet
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle className="text-[#00164D]">
+                        Input your 12 word seed phrase
+                      </DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription>
+                      <Input
+                        type="text"
+                        placeholder="Mnemonic"
+                        onChange={(e) => {
+                          setMnemonic(e.target.value);
+                        }}
+                      />
+                    </DialogDescription>
+                    <DialogFooter>
+                      <Button
+                        className="bg-[#00164D] text-white hover:bg-[#002080]"
+                        onClick={() => {
+                          localStorage.setItem("mnemonic", mnemonic);
+                          setIsWalletCreated("seed");
+                          localStorage.setItem("wallet", "seed");
+                        }}
+                      >
+                        Recover wallet
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
 
