@@ -4,6 +4,8 @@ import { derivePath } from "ed25519-hd-key";
 import React, { useEffect, useState } from "react";
 import nacl from "tweetnacl";
 import { getAccountInfo } from "@/app/actions/solana";
+import bs58 from 'bs58';
+
 import {
   ClipboardCopy,
   Wallet,
@@ -24,24 +26,39 @@ function WalletSection() {
   const [copySuccess, setCopySuccess] = useState(false);
 
   useEffect(() => {
-    const generateKeypair = async () => {
-      const mnemonic = localStorage.getItem("mnemonic");
-      if (mnemonic) {
-        const seed = await mnemonicToSeed(mnemonic);
-        const path = `m/44'/501'/${currentIndex}'/0'`;
-        const derivedSeed = derivePath(path, seed.toString("hex")).key;
-        const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
-        const keypair = Keypair.fromSecretKey(secret);
-        console.log(keypair.secretKey);
-        const pubKey = keypair.publicKey.toBase58();
-        console.log(pubKey);
-        setPublicKey(pubKey);
-        fetchBalance(pubKey);
+    const privateKey = localStorage.getItem('privateKey');
+  
+    if (privateKey) {
+      try {
+        const privateKeyBuffer = bs58.decode(privateKey);
+        const keypair = Keypair.fromSecretKey(privateKeyBuffer);
+        const publicKey = keypair.publicKey.toBase58();
+        setPublicKey(publicKey);
+        fetchBalance(publicKey);
+      } catch (error) {
+        console.error("Failed to parse private key. Raw value:", error);
       }
-    };
-
-    generateKeypair();
+    } else {
+      const generateKeypair = async () => {
+        const mnemonic = localStorage.getItem("mnemonic");
+        if (mnemonic) {
+          const seed = await mnemonicToSeed(mnemonic);
+          const path = `m/44'/501'/${currentIndex}'/0'`;
+          const derivedSeed = derivePath(path, seed.toString("hex")).key;
+          const secret = nacl.sign.keyPair.fromSeed(derivedSeed).secretKey;
+          const keypair = Keypair.fromSecretKey(secret);
+          console.log(keypair.secretKey);
+          const pubKey = keypair.publicKey.toBase58();
+          console.log(pubKey);
+          setPublicKey(pubKey);
+          fetchBalance(pubKey);
+          localStorage.setItem('privateKey', JSON.stringify(Array.from(keypair.secretKey))); // 🔑 Save correctly
+        }
+      };
+      generateKeypair();
+    }
   }, [currentIndex]);
+  
 
   const fetchBalance = async (pubKey: string) => {
     try {

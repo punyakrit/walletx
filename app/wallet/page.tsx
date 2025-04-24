@@ -81,7 +81,8 @@ export default function WalletPage() {
       )}
       {isWalletCreated === "key" && (
         <div>
-          <h1>Wallet</h1>
+                    <WalletSection/>
+
         </div>
       )}
     </>
